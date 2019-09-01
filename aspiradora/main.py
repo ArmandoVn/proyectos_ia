@@ -32,6 +32,12 @@ def bfs(nodo):
         if nodo.es_final == True:
             return
 
+def valida_estado(estado_inicial, arbol):
+    if estado_inicial == 1 or estado_inicial == 3:
+        arbol[6].visitado = True
+    elif estado_inicial == 2 or estado_inicial == 6:
+        arbol[7].visitado = True
+
 #   Funcion main que solicita un estado inicial.
 def main():
     print("#############################################\n")
@@ -49,6 +55,7 @@ def main():
     print("7.- ( limpio, limpio, izquierda )")
     print("8.- ( limpio, limpio, derecha )")
     estado_inicial = int(input())
+    valida_estado(estado_inicial, arbol)
     print("\nEl recorrido del arbol es:\n")
     bfs(encuentraNodo(estado_inicial))
 
