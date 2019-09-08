@@ -87,10 +87,12 @@ def busquedaEnProfundidad(pilaEstados, estadosVisitados, estado, ruta):
                    hijos.pop(i)
             pilaEstados+=hijos
             return pilaEstados, estadosVisitados
-        return pilaEstados, estadosVisitados
-    print("Solucion")
-    estado.imprimeCuadro()
-    return [], []
+        else:
+            return pilaEstados, estadosVisitados
+    else:
+        print("Solucion")
+        estado.imprimeCuadro()
+        return [], []
 
 def main():
     pilaEstados = []
@@ -99,8 +101,9 @@ def main():
     #estadoInicial = Estado([[4,0,7],[8,1,5],[6,3,2]])
     #estadoInicial = Estado([[1,2,3],[0,5,6],[4,7,8]])
     #estadoInicial = Estado([[1,2,3],[4,5,6],[7,8,0]])
-    estadoInicial = Estado([[0,1,2],[3,4,5],[6,7,8]])
-    pilaEstados, estadosVisitados = busquedaEnProfundidad(pilaEstados, estadosVisitados, estadoInicial, estadoInicial.ruta[:])
+    #estadoInicial = Estado([[0,1,2],[3,4,5],[6,7,8]])
+    estadoInicial = Estado([[5,7,2],[0,6,8],[1,3,4]])
+    pilaEstados.append(estadoInicial)
     while (len(pilaEstados)>0):
         e1 = pilaEstados.pop()
         pilaEstados, estadosVisitados = busquedaEnProfundidad(pilaEstados, estadosVisitados, e1, e1.ruta)
