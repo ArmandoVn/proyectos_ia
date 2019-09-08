@@ -72,31 +72,42 @@ def validaEstadosVisitados(estadosVisitados, estado):
 # en caso de no cumplir con las dos anteriores el nuevo estado se agregara
 # al cola de estados visitados y se le cargara la ruta que tuvo que seguir
 # para llegar al estado actual.
-def busquedaEnProfundidad(pilaEstados, estadosVisitados, estado, ruta):
+def busquedaEnProfundidad(pilaEstados, estadosVisitados, estado):
     if(not validaEstadoFinal(estado)):
         if(not validaEstadosVisitados(estadosVisitados, estado)):
             estadosVisitados.append(estado)
-            estado.ruta = ruta
-            estado.ruta.append(estado)
-            estado.imprimeRuta()
             posicionX, posicionY = encuentraNumero(estado.matrizNumeros, 0)
             hijos = ordenaMayorAMenor(generaHijos(estado, posicionX, posicionY))
             aux = hijos[:]
             for i in range(0, len(aux)-1):
                 if(validaEstadosVisitados(estadosVisitados, aux[i])):
                    hijos.pop(i)
+            for i in hijos:
+                i.padre = estado
             pilaEstados+=hijos
-            return pilaEstados, estadosVisitados
+            return pilaEstados, estadosVisitados, None
         else:
-            return pilaEstados, estadosVisitados
+            return pilaEstados, estadosVisitados, None
     else:
-        print("Solucion")
-        estado.imprimeCuadro()
-        return [], []
+        return [], [], estado
+
+def generaRuta(estado, ruta): 
+    while estado.padre != None:
+        ruta.append(estado)
+        estado = estado.padre
+    ruta.append(estado)
+
+def imprimeRuta(ruta):
+    while len(ruta) > 0:
+        if len(ruta) == 1:
+            print("¡Solucion!")
+        ruta.pop().imprimeCuadro()
 
 def main():
     pilaEstados = []
     estadosVisitados = []
+    estadoFinal = None
+    ruta = []
     #estadoInicial = Estado([[1,2,3],[4,5,6],[0,7,8]])
     #estadoInicial = Estado([[4,0,7],[8,1,5],[6,3,2]])
     #estadoInicial = Estado([[1,2,3],[0,5,6],[4,7,8]])
@@ -106,8 +117,11 @@ def main():
     pilaEstados.append(estadoInicial)
     while (len(pilaEstados)>0):
         e1 = pilaEstados.pop()
-        pilaEstados, estadosVisitados = busquedaEnProfundidad(pilaEstados, estadosVisitados, e1, e1.ruta)
-
+        pilaEstados, estadosVisitados, estadoFinal = busquedaEnProfundidad(pilaEstados, estadosVisitados, e1)
+    
+    if(estadoFinal != None):
+        generaRuta(estadoFinal, ruta)
+        imprimeRuta(ruta)
 
 main()
 

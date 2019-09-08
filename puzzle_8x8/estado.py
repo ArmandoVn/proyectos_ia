@@ -2,7 +2,7 @@ class Estado:
     def __init__(self, matrizNumeros):
         self.matrizNumeros = matrizNumeros
         self.__numerosFueraDeLugar()
-        self.ruta = []
+        self.padre = None
 
     def imprimeCuadro(self):
         print(self.matrizNumeros[0])
@@ -16,12 +16,6 @@ class Estado:
             for j in range(0,3):
                 if(estadoFinal[i][j] != self.matrizNumeros[i][j]):
                     self.numerosFueraLugar+=1
-
-    def imprimeRuta(self):
-        for estado in self.ruta:
-            estado.imprimeCuadro()
-
-
 
 
 
