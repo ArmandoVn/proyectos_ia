@@ -35,22 +35,17 @@ def ordenaMayorAMenor(estados):
         contador+=1
     return estados
 
-# Encuentra la posicion X y Y del "numero" en el tablero.
-def encuentraNumero(matriz, numero):
-    posicionY = 0
-    for i in range(0,3):
-        posicionX = 0
-        for j in range(0,3):
-            if(matriz[i][j] == numero):
-                return posicionX, posicionY
-            posicionX+=1
-        posicionY+=1
-
-# Regresa true si es un estado final
-def validaEstadoFinal(estado):
-    if estado.numerosFueraLugar == 0:
-        return True
-    return False
+# Ordena los hijos de cada estado de mayor a menor para insertarlos en la pila.
+def ordenaMayorAMenor2(estados):
+    contador = 1
+    for x in range(0,len(estados)-1):
+        for i in range(0,len(estados)-contador):
+            if(estados[i].numerosFueraLugarCuentaPosiciones < estados[i+1].numerosFueraLugarCuentaPosiciones):
+                aux = estados[i]
+                estados[i] = estados[i+1]
+                estados[i+1] = aux
+        contador+=1
+    return estados
 
 # Si la matrz1 es igual a la mariz2 regresa True
 def comparaMatrices(matriz1, matriz2):
@@ -73,11 +68,11 @@ def validaEstadosVisitados(estadosVisitados, estado):
 # al cola de estados visitados y se le cargara la ruta que tuvo que seguir
 # para llegar al estado actual.
 def busquedaEnProfundidad(pilaEstados, estadosVisitados, estado):
-    if(not validaEstadoFinal(estado)):
+    if(not estado.validaEstadoFinal()):
         if(not validaEstadosVisitados(estadosVisitados, estado)):
             estadosVisitados.append(estado)
-            posicionX, posicionY = encuentraNumero(estado.matrizNumeros, 0)
-            hijos = ordenaMayorAMenor(generaHijos(estado, posicionX, posicionY))
+            posicionX, posicionY = estado.encuentraNumero(0)
+            hijos = ordenaMayorAMenor2(generaHijos(estado, posicionX, posicionY))
             aux = hijos[:]
             for i in range(0, len(aux)-1):
                 if(validaEstadosVisitados(estadosVisitados, aux[i])):
@@ -89,7 +84,7 @@ def busquedaEnProfundidad(pilaEstados, estadosVisitados, estado):
         else:
             return pilaEstados, estadosVisitados, None
     else:
-        return [], [], estado
+        return [], estadosVisitados, estado
 
 def generaRuta(estado, ruta): 
     while estado.padre != None:
@@ -108,11 +103,10 @@ def main():
     estadosVisitados = []
     estadoFinal = None
     ruta = []
-    #estadoInicial = Estado([[1,2,3],[4,5,6],[0,7,8]])
-    #estadoInicial = Estado([[4,0,7],[8,1,5],[6,3,2]])
-    #estadoInicial = Estado([[1,2,3],[0,5,6],[4,7,8]])
     #estadoInicial = Estado([[1,2,3],[4,5,6],[7,8,0]])
-    #estadoInicial = Estado([[0,1,2],[3,4,5],[6,7,8]])
+    #estadoInicial = Estado([[1,2,3],[4,5,6],[0,7,8]])
+    #estadoInicial = Estado([[1,2,3],[0,5,6],[4,7,8]])
+    #estadoInicial = Estado([[4,0,7],[8,1,5],[6,3,2]])
     estadoInicial = Estado([[5,7,2],[0,6,8],[1,3,4]])
     pilaEstados.append(estadoInicial)
     while (len(pilaEstados)>0):
@@ -121,7 +115,9 @@ def main():
     
     if(estadoFinal != None):
         generaRuta(estadoFinal, ruta)
+        hijos = len(ruta)
         imprimeRuta(ruta)
+        print(hijos)
 
 main()
 
